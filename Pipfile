@@ -6,6 +6,8 @@ verify_ssl = true
 [dev-packages]
 pytest = "*"
 pytest-cov = "*"
+flake8 = "*"
+black = "*"
 
 [packages]
 
@@ -15,3 +17,5 @@ python_version = "3.7"
 [scripts]
 test = "pytest -v test/"
 "test:coverage" = "pytest --cov=src/ --cov-branch --cov-report=html test/"
+autoformat = "black -t py37 ."
+lint = "flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics"
