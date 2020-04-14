@@ -25,7 +25,7 @@ parser.add_argument(
 parser.add_argument(
     "--profile", "-p", help="Name(s) of the profile(s) to be initialized", type=str)
 parser.add_argument(
-    "--env", help="The environment(s) to create", default="sandbox", type=str)
+    "--env", help="The environment(s) to create", type=str)
 
 parser.add_argument(
     "--awsprofile", "-a", help="The profile in your AWS configuration to use", type=str, default='default')
