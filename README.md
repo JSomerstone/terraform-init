@@ -57,9 +57,9 @@ Will create directory structure:
         └── backend.tf
 ```
 
-*Create new module to existing project "pre_existing" in folder projectes/
+*Create new module to existing project*
 
-`src/init-terraform.py --module permission --target projects/pre_existing` 
+`src/init-terraform.py --module permission projects/pre_existing` 
 
 Will create folder `projects/pre_existing/_modules/permissions` with files base.tf and variables.tf
 
