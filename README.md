@@ -5,22 +5,16 @@ Python tool for initializing Terraform (AWS) projects
 ## Usage
 
 ```
-usage: init-terraform.py [-h] [--target TARGET] [--module MODULE]
-                         [--profile PROFILE] [--env ENV]
-                         [--awsprofile AWSPROFILE] [--awsregion AWSREGION]
-                         [--force] [-v]
-                         project
+usage: init-terraform.py [-h] [--module MODULE] [--profile PROFILE] [--env ENV] [--awsprofile AWSPROFILE] [--awsregion AWSREGION] [--force] [-v] target
 
 Terraform project initializer, creates basic folder structure and placeholder
 files
 
 positional arguments:
-  project               Name of the project to be initialized
+  target                Where to create the project to, defaults to current working directory (.)
 
 optional arguments:
   -h, --help            show this help message and exit
-  --target TARGET       Where to create the project to, defaults to current
-                        working directory
   --module MODULE, -m MODULE
                         Name(s) of the module(s) to create
   --profile PROFILE, -p PROFILE
@@ -36,13 +30,13 @@ optional arguments:
 
 ## Examples
 
-Create project with modules "lambda" and "api_gateway", environments "test" and "prod" and profile "sandbox"
+*Create terraform modules, environment and profile*
 
-`src/init-terraform.py example_project --module lambda,api_gateway --env test,prod --profile sandbox`
+`src/init-terraform.py --module lambda,api_gateway --env test,prod --profile sandbox`
 
 Will create directory structure: 
 ```
-example_project
+/path/to/work/dir
 ├── _modules
 │   ├── api_gateway
 │   │   ├── base.tf
@@ -63,8 +57,22 @@ example_project
         └── backend.tf
 ```
 
-Create new module to existing project "pre_existing" in folder projectes/
+*Create new module to existing project "pre_existing" in folder projectes/
 
-`src/init-terraform.py pre_existing --module permission --target projects/` 
+`src/init-terraform.py --module permission --target projects/pre_existing` 
 
 Will create folder `projects/pre_existing/_modules/permissions` with files base.tf and variables.tf
+
+*Overwrite existing environment*
+
+`src/init-terraform.py --env sandbox --awsprofile development --awsregion eu-central-1 --force .` 
+
+Will overwrite file `./environment/sandbox/input_vars.tfvars` with content:
+```
+bucket = "<bucket-for-tf-backend>"
+key = "alias/tf-encryption-key"
+region = "eu-central-1"
+dynamodb_table = "tf-backend"
+encrypt = "true"
+profile = "development"
+```

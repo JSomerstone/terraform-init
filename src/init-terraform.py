@@ -17,9 +17,9 @@ def create_file(path, content = "", force = False, verbosity = 0):
     print(f"[s] {path}")
 
 parser = argparse.ArgumentParser(description='Terraform project initializer, creates basic folder structure and placeholder files')
-parser.add_argument("project", help="Name of the project to be initialized", type=str)
 parser.add_argument(
-    "--target", help="Where to create the project to, defaults to current working directory", type=str, default=".")
+    "target", help="Where to create the project to, defaults to current working directory (.)", type=str, default=".")
+parser.add_argument('--name', '-n', help="Name of the project, defaults to name of the <target> directory", type=str, default="")
 parser.add_argument(
     "--module", "-m", help="Name(s) of the module(s) to create", type=str)
 parser.add_argument(
@@ -45,9 +45,14 @@ profiles = []
 environments = []
 
 if args.target == '.':
-  cd = os.getcwd()
+  target = os.getcwd()
 else:
-  cd = args.target
+  target = args.target
+
+if args.name:
+  project = args.name
+else:
+  project = target.split('/')[-1]
 
 if args.module:
   for item in args.module.split(","):
@@ -66,9 +71,9 @@ if modules and args.verbosity > 0:
   print(f'\nCreating {len(modules)} module(s)... ')
 
 for module in modules:
-  Path(f"{cd}/{args.project}/_modules/{module}").mkdir(parents=True, exist_ok=True)
+  Path(f"{target}/_modules/{module}").mkdir(parents=True, exist_ok=True)
   for tf in ['base.tf', 'variables.tf']:
-    path = f"{cd}/{args.project}/_modules/{module}/{tf}"
+    path = f"{target}/_modules/{module}/{tf}"
     create_file(path, force=args.force, verbosity=args.verbosity)
 
   if args.verbosity > 1:
@@ -78,13 +83,13 @@ if profiles and args.verbosity > 0:
   print(f'\nCreating {len(profiles)} profile(s)...')
 
 for profile in profiles:
-  Path(f"{cd}/{args.project}/profiles/{profile}").mkdir(parents=True, exist_ok=True)
+  Path(f"{target}/profiles/{profile}").mkdir(parents=True, exist_ok=True)
   for tf in ['main.tf', 'variables.tf']:
-    path = f"{cd}/{args.project}/profiles/{profile}/{tf}"
+    path = f"{target}/profiles/{profile}/{tf}"
     create_file(path, force=args.force, verbosity=args.verbosity)
   
   create_file(
-      f"{cd}/{args.project}/profiles/{profile}/backend.tf",
+      f"{target}/profiles/{profile}/backend.tf",
       force=args.force,
       verbosity=args.verbosity,
       content="""terraform {
@@ -95,7 +100,7 @@ for profile in profiles:
   )
 
   create_file(
-      f"{cd}/{args.project}/profiles/{profile}/provider.tf",
+      f"{target}/profiles/{profile}/provider.tf",
       force=args.force,
       verbosity=args.verbosity,
       content=f"""provider "aws" {{
@@ -111,13 +116,13 @@ for profile in profiles:
 if environments and args.verbosity > 0:
   print(f'\nCreating {len(environments)} environment(s)...')
 for env in environments:
-  Path(f"{cd}/{args.project}/environment/{env}").mkdir(parents=True, exist_ok=True)
-  path = f"{cd}/{args.project}/environment/{env}/input_vars.tfvars"
+  Path(f"{target}/environment/{env}").mkdir(parents=True, exist_ok=True)
+  path = f"{target}/environment/{env}/input_vars.tfvars"
   create_file(path, force=args.force, verbosity=args.verbosity, content=
-    f"""bucket = "<bucket-for-{args.project}-backend>"
-key = "alias/{args.project}-encryption-key"
+    f"""bucket = "<bucket-for-{project}-backend>"
+key = "alias/{project}-encryption-key"
 region = "{args.awsregion}"
-dynamodb_table = "{args.project}-backend"
+dynamodb_table = "{project}-backend"
 encrypt = "true"
 profile = "{args.awsprofile}"
 """
@@ -128,4 +133,4 @@ profile = "{args.awsprofile}"
 
 if args.verbosity > 0:
   print('\nDone; project structure:\n')
-  ptree(f'{cd}/{args.project}')
+  ptree(target)

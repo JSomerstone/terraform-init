@@ -1,7 +1,7 @@
 from pathlib import Path
 
 def ptree(dir_path):
-  print(dir_path.split('/')[-1])
+  print(dir_path)
   for line in tree(Path(dir_path)):
     print(line)
 
