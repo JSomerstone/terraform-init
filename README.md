@@ -69,10 +69,10 @@ Will create folder `projects/pre_existing/_modules/permissions` with files base.
 
 Will overwrite file `./environment/sandbox/input_vars.tfvars` with content:
 ```
-bucket = "<bucket-for-tf-backend>"
-key = "alias/tf-encryption-key"
+bucket = "<tf-sandbox-backend-bucket>"
+key = "<alias/tf-sandbox-encryption-key>"
 region = "eu-central-1"
-dynamodb_table = "tf-backend"
+dynamodb_table = "<tf-sandbox-backend-database>"
 encrypt = "true"
 profile = "development"
 ```

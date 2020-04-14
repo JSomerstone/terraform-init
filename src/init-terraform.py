@@ -119,10 +119,10 @@ for env in environments:
   Path(f"{target}/environment/{env}").mkdir(parents=True, exist_ok=True)
   path = f"{target}/environment/{env}/input_vars.tfvars"
   create_file(path, force=args.force, verbosity=args.verbosity, content=
-    f"""bucket = "<bucket-for-{project}-backend>"
-key = "alias/{project}-encryption-key"
+              f"""bucket = "<{project}-{env}-backend-bucket>"
+key = "<alias/{project}-{env}-encryption-key>"
 region = "{args.awsregion}"
-dynamodb_table = "{project}-backend"
+dynamodb_table = "<{project}-{env}-backend-database>"
 encrypt = "true"
 profile = "{args.awsprofile}"
 """
