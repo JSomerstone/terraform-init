@@ -8,7 +8,7 @@ from src import init_terraform
 @patch("src.init_terraform.create_file")
 def test_main_with_modules(create_file, path, ptree, capsys):
 
-    init_terraform.main(["--module", "module-A,module-B", "-v", "-v", "terraform/test"])
+    init_terraform.main(["--module", "module-A,module-B", "-vv", "terraform/test"])
     create_file.assert_called_with(
         "terraform/test/_modules/module-B/variables.tf", force=False, verbosity=2
     )
@@ -27,8 +27,7 @@ def test_main_with_profiles(create_file, path, ptree, capsys):
         [
             "--profile",
             "demo,vip",
-            "-v",
-            "-v",
+            "-vv",
             "--awsregion",
             "test-region",
             "--awsprofile",
@@ -58,7 +57,7 @@ def test_main_with_profiles(create_file, path, ptree, capsys):
 def test_main_with_environments(create_file, path, ptree, capsys):
 
     init_terraform.main(
-        ["--env", "test,prod", "--name", "fake", "-v", "-v", "terraform/test"]
+        ["--env", "test,prod", "--name", "fake", "-vv", "terraform/test"]
     )
     create_file.assert_called_with(
         "terraform/test/environment/prod/input_vars.tfvars",
