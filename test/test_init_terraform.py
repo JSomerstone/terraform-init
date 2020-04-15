@@ -75,3 +75,51 @@ def test_main_with_environments(create_file, path, ptree, capsys):
     captured = capsys.readouterr()
     assert 'Environment "test" created' in captured.out
     assert 'Environment "prod" created' in captured.out
+
+
+@patch("src.init_terraform.ptree")
+@patch("src.init_terraform.Path")
+@patch("src.init_terraform.create_file")
+def test_main_with_all(create_file, path, ptree):
+    init_terraform.main(
+        "-m sample_module -p sample_profile --env sample_env -n project -r sample-region .".split(
+            " "
+        )
+    )
+    expected_file_write_count = 2 + 4 + 1
+    assert create_file.call_count == expected_file_write_count
+
+
+def test_create_file(tmp_path, capsys):
+    target = tmp_path / "bogus.tf"
+    init_terraform.create_file(
+        path=str(target), content="content of the file", verbosity=0
+    )
+    assert target.read_text() == "content of the file"
+    captured = capsys.readouterr()
+    assert captured.out == ""
+
+
+def test_create_file_with_force(tmp_path, capsys):
+    target = tmp_path / "bogus.tf"
+    target.write_text("Existing text")
+    assert target.read_text() == "Existing text"
+
+    init_terraform.create_file(
+        path=str(target), content="New content", force=True, verbosity=2
+    )
+    assert target.read_text() == "New content"
+    captured = capsys.readouterr()
+    assert captured.out == f"[+] {target}\n"
+
+
+def test_create_file_with_skip(tmp_path, capsys):
+    target = tmp_path / "bogus.tf"
+    target.write_text("Existing text")
+
+    init_terraform.create_file(
+        path=str(target), content="New content", force=False, verbosity=2
+    )
+    assert target.read_text() == "Existing text"
+    captured = capsys.readouterr()
+    assert captured.out == f"[s] {target}\n"

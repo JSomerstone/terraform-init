@@ -68,7 +68,7 @@ def get_parsed_arguments(arguments: list):
     parser.add_argument(
         "--profile", "-p", help="Name(s) of the profile(s) to be initialized", type=str
     )
-    parser.add_argument("--env", help="The environment(s) to create", type=str)
+    parser.add_argument("--env", "-e", help="The environment(s) to create", type=str)
 
     parser.add_argument(
         "--awsprofile",
@@ -79,6 +79,7 @@ def get_parsed_arguments(arguments: list):
     )
     parser.add_argument(
         "--awsregion",
+        "-r",
         help="AWS region, defaults to 'eu-west-1'",
         default="eu-west-1",
         type=str,
@@ -172,8 +173,7 @@ def create_file(path, content="", force=False, verbosity=0):
         if verbosity > 0:
             print(f"[+] {path}")
         with open(path, "w") as file_tf:
-            if force:
-                file_tf.write(content)
+            file_tf.write(content)
     elif verbosity > 1:
         print(f"[s] {path}")
 
