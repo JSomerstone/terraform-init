@@ -1,8 +1,5 @@
 from pathlib import Path
 
-print("Running" if __name__ == "__main__" else "Importing", Path(__file__).resolve())
-
-
 def ptree(dir_path):
     print(dir_path)
     p = Path(dir_path)

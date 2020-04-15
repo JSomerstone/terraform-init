@@ -5,24 +5,30 @@ Python tool for initializing Terraform (AWS) projects
 ## Usage
 
 ```
-usage: init-terraform.py [-h] [--module MODULE] [--profile PROFILE] [--env ENV] [--awsprofile AWSPROFILE] [--awsregion AWSREGION] [--force] [-v] target
+usage: tfinit.py [-h] [--name NAME] [--module MODULE] [--profile PROFILE]
+                 [--env ENV] [--awsprofile AWSPROFILE] [--awsregion AWSREGION]
+                 [--force] [-v]
+                 target
 
 Terraform project initializer, creates basic folder structure and placeholder
 files
 
 positional arguments:
-  target                Where to create the project to, defaults to current working directory (.)
+  target                Where to create the project to, defaults to current
+                        working directory (.)
 
 optional arguments:
   -h, --help            show this help message and exit
+  --name NAME, -n NAME  Name of the project, defaults to name of the <target>
+                        directory
   --module MODULE, -m MODULE
                         Name(s) of the module(s) to create
   --profile PROFILE, -p PROFILE
                         Name(s) of the profile(s) to be initialized
-  --env ENV             The environment(s) to create
+  --env ENV, -e ENV     The environment(s) to create
   --awsprofile AWSPROFILE, -a AWSPROFILE
                         The profile in your AWS configuration to use
-  --awsregion AWSREGION
+  --awsregion AWSREGION, -r AWSREGION
                         AWS region, defaults to 'eu-west-1'
   --force, -f           Force overwrite of any existing files
   -v, --verbosity
@@ -32,7 +38,7 @@ optional arguments:
 
 *Create terraform modules, environment and profile*
 
-`src/init-terraform.py --module lambda,api_gateway --env test,prod --profile sandbox`
+`tfinit.py --module lambda,api_gateway --env test,prod --profile sandbox`
 
 Will create directory structure: 
 ```
@@ -59,13 +65,13 @@ Will create directory structure:
 
 *Create new module to existing project*
 
-`src/init-terraform.py --module permission projects/pre_existing` 
+`tfinit.py --module permission projects/pre_existing` 
 
 Will create folder `projects/pre_existing/_modules/permissions` with files base.tf and variables.tf
 
 *Overwrite existing environment*
 
-`src/init-terraform.py --env sandbox --awsprofile development --awsregion eu-central-1 --force .` 
+`tfinit.py --env sandbox --awsprofile development --awsregion eu-central-1 --force .` 
 
 Will overwrite file `./environment/sandbox/input_vars.tfvars` with content:
 ```
