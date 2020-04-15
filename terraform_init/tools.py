@@ -1,10 +1,14 @@
 from pathlib import Path
 
+print("Running" if __name__ == "__main__" else "Importing", Path(__file__).resolve())
+
 
 def ptree(dir_path):
     print(dir_path)
-    for line in tree(Path(dir_path)):
-        print(line)
+    p = Path(dir_path)
+    if p.is_dir():
+        for line in tree(p):
+            print(line)
 
 
 def tree(dir_path: Path, prefix: str = ""):

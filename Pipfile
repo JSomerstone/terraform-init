@@ -15,7 +15,10 @@ black = "*"
 python_version = "3.7"
 
 [scripts]
-test = "pytest -v test/"
-"test:coverage" = "pytest --cov=src/ --cov-branch --cov-report=html test/"
+test = "pytest -v tests/"
+"test:coverage" = "pytest --cov=src/ --cov-branch --cov-report=html tests/"
 autoformat = "black -t py37 ."
 lint = "flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics"
+
+[pipenv]
+allow_prereleases = true

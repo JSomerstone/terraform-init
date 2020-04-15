@@ -1,29 +1,27 @@
 from unittest.mock import patch
 
-from src import init_terraform
+from terraform_init import tfinit
 
 
-@patch("src.init_terraform.ptree")
-@patch("src.init_terraform.Path")
-@patch("src.init_terraform.create_file")
-def test_main_with_modules(create_file, path, ptree, capsys):
+@patch("terraform_init.tfinit.Path")
+@patch("terraform_init.tfinit.create_file")
+def test_main_with_modules(create_file, path, capsys):
 
-    init_terraform.main(["--module", "module-A,module-B", "-vv", "terraform/test"])
+    tfinit.main("--module module-A,module-B -vv tf".split())
     create_file.assert_called_with(
-        "terraform/test/_modules/module-B/variables.tf", force=False, verbosity=2
+        "tf/_modules/module-B/variables.tf", force=False, verbosity=2
     )
-    path.assert_called_with("terraform/test/_modules/module-B")
+    path.assert_called_with("tf/_modules/module-B")
     captured = capsys.readouterr()
     assert 'Module "module-A" created' in captured.out
     assert 'Module "module-B" created' in captured.out
 
 
-@patch("src.init_terraform.ptree")
-@patch("src.init_terraform.Path")
-@patch("src.init_terraform.create_file")
-def test_main_with_profiles(create_file, path, ptree, capsys):
+@patch("terraform_init.tfinit.Path")
+@patch("terraform_init.tfinit.create_file")
+def test_main_with_profiles(create_file, path, capsys):
 
-    init_terraform.main(
+    tfinit.main(
         [
             "--profile",
             "demo,vip",
@@ -51,14 +49,11 @@ def test_main_with_profiles(create_file, path, ptree, capsys):
     assert 'Profile "demo" created' in captured.out
 
 
-@patch("src.init_terraform.ptree")
-@patch("src.init_terraform.Path")
-@patch("src.init_terraform.create_file")
-def test_main_with_environments(create_file, path, ptree, capsys):
+@patch("terraform_init.tfinit.Path")
+@patch("terraform_init.tfinit.create_file")
+def test_main_with_environments(create_file, path, capsys):
 
-    init_terraform.main(
-        ["--env", "test,prod", "--name", "fake", "-vv", "terraform/test"]
-    )
+    tfinit.main(["--env", "test,prod", "--name", "fake", "-vv", "terraform/test"])
     create_file.assert_called_with(
         "terraform/test/environment/prod/input_vars.tfvars",
         force=False,
@@ -77,11 +72,10 @@ def test_main_with_environments(create_file, path, ptree, capsys):
     assert 'Environment "prod" created' in captured.out
 
 
-@patch("src.init_terraform.ptree")
-@patch("src.init_terraform.Path")
-@patch("src.init_terraform.create_file")
-def test_main_with_all(create_file, path, ptree):
-    init_terraform.main(
+@patch("terraform_init.tfinit.Path")
+@patch("terraform_init.tfinit.create_file")
+def test_main_with_all(create_file, path):
+    tfinit.main(
         "-m sample_module -p sample_profile --env sample_env -n project -r sample-region .".split(
             " "
         )
@@ -92,9 +86,7 @@ def test_main_with_all(create_file, path, ptree):
 
 def test_create_file(tmp_path, capsys):
     target = tmp_path / "bogus.tf"
-    init_terraform.create_file(
-        path=str(target), content="content of the file", verbosity=0
-    )
+    tfinit.create_file(path=str(target), content="content of the file", verbosity=0)
     assert target.read_text() == "content of the file"
     captured = capsys.readouterr()
     assert captured.out == ""
@@ -105,9 +97,7 @@ def test_create_file_with_force(tmp_path, capsys):
     target.write_text("Existing text")
     assert target.read_text() == "Existing text"
 
-    init_terraform.create_file(
-        path=str(target), content="New content", force=True, verbosity=2
-    )
+    tfinit.create_file(path=str(target), content="New content", force=True, verbosity=2)
     assert target.read_text() == "New content"
     captured = capsys.readouterr()
     assert captured.out == f"[+] {target}\n"
@@ -117,7 +107,7 @@ def test_create_file_with_skip(tmp_path, capsys):
     target = tmp_path / "bogus.tf"
     target.write_text("Existing text")
 
-    init_terraform.create_file(
+    tfinit.create_file(
         path=str(target), content="New content", force=False, verbosity=2
     )
     assert target.read_text() == "Existing text"

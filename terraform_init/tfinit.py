@@ -4,11 +4,10 @@ import sys
 from pathlib import Path
 import argparse
 
-from src.tools import ptree
+from tools import ptree
 
 
 def main(arguments):
-
     modules = []
     profiles = []
     environments = []
@@ -179,4 +178,4 @@ def create_file(path, content="", force=False, verbosity=0):
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main(sys.argv[1:])
