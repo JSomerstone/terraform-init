@@ -82,3 +82,32 @@ dynamodb_table = "<tf-sandbox-backend-database>"
 encrypt = "true"
 profile = "development"
 ```
+
+## Development
+
+### Pre-requirements
+- pip
+- pipenv
+
+### Setting up
+`pipenv sync -d`
+
+### Running tests
+```
+# All tests
+pipenv run test
+
+# with coverage
+pipenv run test:coverage
+# open coverage report
+open htmlcov/index.html
+```
+
+### House keeping
+```
+# linting
+pipenv run lint
+
+# auto-formatting
+pipenv run autoformat
+```
