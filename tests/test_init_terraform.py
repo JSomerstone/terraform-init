@@ -41,7 +41,7 @@ def test_main_with_profiles(create_file, path, capsys):
     region    = "test-region"
     profile   = "test-profile"
     version   = "~> 2.39.0"
-  }""",
+}""",
     )
     path.assert_called_with("terraform/test/profiles/vip")
     captured = capsys.readouterr()
@@ -59,12 +59,12 @@ def test_main_with_environments(create_file, path, capsys):
         force=False,
         verbosity=2,
         content="""bucket = "<fake-prod-backend-bucket>"
-  key = "<alias/fake-prod-encryption-key>"
-  region = "eu-west-1"
-  dynamodb_table = "<fake-prod-backend-database>"
-  encrypt = "true"
-  profile = "default"
-  """,
+key = "<alias/fake-prod-encryption-key>"
+region = "eu-west-1"
+dynamodb_table = "<fake-prod-backend-database>"
+encrypt = "true"
+profile = "default"
+""",
     )
     path.assert_called_with("terraform/test/environment/prod")
     captured = capsys.readouterr()

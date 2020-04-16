@@ -127,7 +127,7 @@ def create_profiles(target, profiles, args):
     backend "local" {
     }
     required_version = "~> 0.12.0"
-  }""",
+}""",
         )
 
         create_file(
@@ -138,7 +138,7 @@ def create_profiles(target, profiles, args):
     region    = "{args.awsregion}"
     profile   = "{args.awsprofile}"
     version   = "~> 2.39.0"
-  }}""",
+}}""",
         )
         if args.verbosity > 1:
             print(f'Profile "{profile}" created')
@@ -155,12 +155,12 @@ def create_environments(target, environments, project, args):
             force=args.force,
             verbosity=args.verbosity,
             content=f"""bucket = "<{project}-{env}-backend-bucket>"
-  key = "<alias/{project}-{env}-encryption-key>"
-  region = "{args.awsregion}"
-  dynamodb_table = "<{project}-{env}-backend-database>"
-  encrypt = "true"
-  profile = "{args.awsprofile}"
-  """,
+key = "<alias/{project}-{env}-encryption-key>"
+region = "{args.awsregion}"
+dynamodb_table = "<{project}-{env}-backend-database>"
+encrypt = "true"
+profile = "{args.awsprofile}"
+""",
         )
 
         if args.verbosity > 1:
